@@ -22,7 +22,7 @@ async function init() {
         throw new Error("must configure mongo connection string");
     }
 
-    await mongoose.connect(mongoConnectionString);
+    await mongoose.connect(mongoConnectionString, {});
 
     app.listen(3000, () => console.log("Listening on port 3000"));
 }

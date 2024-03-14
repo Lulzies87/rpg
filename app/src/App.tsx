@@ -1,7 +1,11 @@
+import { BuildCharacter } from "./BuildCharacter";
+// import { GameScreen } from "./GameScreen";
+
 function App() {
   return (
     <main>
-      <h1>Hello world</h1>
+      <BuildCharacter />
+      {/* <GameScreen /> */}
     </main>
   );
 }
