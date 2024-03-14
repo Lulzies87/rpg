@@ -10,6 +10,7 @@ export type Stats = {
 export type PlayerData = {
   name: string;
   stats: Stats;
+  currentHp: number;
 };
 
 type PlayerPanelProps = {
@@ -20,12 +21,15 @@ export function PlayerPanel({ playerData }: PlayerPanelProps) {
   const {
     name,
     stats: { hp, stamina, attack, defense },
+    currentHp,
   } = playerData;
 
   return (
     <article className={styles.wrapper}>
       <h2>{name}</h2>
-      <p>HP: {hp}</p>
+      <p>
+        HP: {currentHp}/{hp}
+      </p>
       <p>Stamina: {stamina}</p>
       <p>Attack: {attack}</p>
       <p>Defense: {defense}</p>

@@ -2,7 +2,7 @@ import { FormEvent, useReducer } from "react";
 import { PlayerData, Stats } from "./PlayerPanel";
 
 type BuildCharacterProps = {
-  onGameStart(playerData: PlayerData): void;
+  onGameStart(playerData: Omit<PlayerData, "currentHp">): void;
 };
 
 export function BuildCharacter({ onGameStart }: BuildCharacterProps) {
@@ -116,7 +116,9 @@ function statsReducer(stats: Stats, action: StatsAction) {
   return newTotal > maxPoints ? stats : updatedStats;
 }
 
-function useStats(onGameStart: (playerData: PlayerData) => void) {
+function useStats(
+  onGameStart: (playerData: Omit<PlayerData, "currentHp">) => void
+) {
   const [stats, updateStat] = useReducer(statsReducer, initialStats);
 
   const remainingPoints =

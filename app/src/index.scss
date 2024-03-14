@@ -18,6 +18,13 @@ body {
   font-family: system-ui, sans-serif;
 }
 
+html,
+body,
+main,
+#root {
+  height: 100%;
+}
+
 input,
 button,
 select {
