@@ -1,6 +1,11 @@
 import { FormEvent, useReducer } from "react";
+import { PlayerData, Stats } from "./PlayerPanel";
 
-export function BuildCharacter() {
+type BuildCharacterProps = {
+  onGameStart(playerData: PlayerData): void;
+};
+
+export function BuildCharacter({ onGameStart }: BuildCharacterProps) {
   const {
     hp,
     updateHp,
@@ -11,31 +16,13 @@ export function BuildCharacter() {
     defense,
     updateDefense,
     remainingPoints,
-  } = useStats();
+    startGame,
+  } = useStats(onGameStart);
 
   return (
     <>
       <h1>Build your character</h1>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-
-          if (remainingPoints > 0) {
-            console.error("Need to invest all points");
-            return;
-          }
-
-          const formData = new FormData(e.currentTarget);
-
-          console.log({
-            name: formData.get("name"),
-            hp,
-            stamina,
-            attack,
-            defense,
-          });
-        }}
-      >
+      <form onSubmit={startGame}>
         <div>
           <label htmlFor="name">Name</label>
           <input type="text" name="name" id="name" required />
@@ -105,13 +92,6 @@ export function BuildCharacter() {
 
 const maxPoints = 16;
 
-type Stats = {
-  hp: number;
-  stamina: number;
-  attack: number;
-  defense: number;
-};
-
 type StatsAction = { statToUpdate: keyof Stats; newValue: number };
 
 const initialStats: Stats = {
@@ -136,13 +116,15 @@ function statsReducer(stats: Stats, action: StatsAction) {
   return newTotal > maxPoints ? stats : updatedStats;
 }
 
-function useStats() {
+function useStats(onGameStart: (playerData: PlayerData) => void) {
   const [stats, updateStat] = useReducer(statsReducer, initialStats);
+
+  const remainingPoints =
+    maxPoints - stats.hp - stats.stamina - stats.attack - stats.defense;
 
   return {
     ...stats,
-    remainingPoints:
-      maxPoints - stats.hp - stats.stamina - stats.attack - stats.defense,
+    remainingPoints,
     updateHp: (e: FormEvent<HTMLInputElement>) =>
       updateStat({
         statToUpdate: "hp",
@@ -163,5 +145,25 @@ function useStats() {
         statToUpdate: "defense",
         newValue: e.currentTarget.valueAsNumber,
       }),
+    startGame: (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      if (remainingPoints > 0) {
+        console.error("Need to invest all points");
+        return;
+      }
+
+      const formData = new FormData(e.currentTarget);
+
+      onGameStart({
+        name: formData.get("name")!.toString(),
+        stats: {
+          hp: stats.hp,
+          stamina: stats.stamina,
+          attack: stats.attack,
+          defense: stats.defense,
+        },
+      });
+    },
   };
 }
