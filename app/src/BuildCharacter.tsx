@@ -1,5 +1,10 @@
 import { FormEvent, useReducer } from "react";
 import { PlayerData, Stats } from "./PlayerPanel";
+import axios from "axios";
+
+const server = axios.create({
+  baseURL:"http://localhost:3000",
+});
 
 type BuildCharacterProps = {
   onGameStart(playerData: Omit<PlayerData, "currentHp">): void;
@@ -148,7 +153,7 @@ function useStats(
         statToUpdate: "defense",
         newValue: e.currentTarget.valueAsNumber,
       }),
-    startGame: (e: FormEvent<HTMLFormElement>) => {
+    startGame: async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       if (remainingPoints > 0) {
@@ -157,6 +162,26 @@ function useStats(
       }
 
       const formData = new FormData(e.currentTarget);
+
+      const characterData = {
+        name: formData.get("name")!.toString(),
+        stats: {
+          hp: stats.hp,
+          stamina: stats.stamina,
+          attack: stats.attack,
+          defence: stats.defense,
+        },
+      };
+
+      try {
+        const response = await server.post(
+          "/api/characters",
+          characterData
+        );
+        console.log("Character saved:", response.data);
+      } catch (error) {
+        console.error("Error saving character:", error);
+      }
 
       onGameStart({
         name: formData.get("name")!.toString(),
