@@ -34,7 +34,7 @@ export function BuildCharacter({ onGameStart }: BuildCharacterProps) {
             name="hp"
             id="hp"
             value={hp}
-            onInput={updateHp}
+            onChange={updateHp}
             min={0}
             required
           />
@@ -46,7 +46,7 @@ export function BuildCharacter({ onGameStart }: BuildCharacterProps) {
             name="stamina"
             id="stamina"
             value={stamina}
-            onInput={updateStamina}
+            onChange={updateStamina}
             min={0}
             required
           />
@@ -58,7 +58,7 @@ export function BuildCharacter({ onGameStart }: BuildCharacterProps) {
             name="attack"
             id="attack"
             value={attack}
-            onInput={updateAttack}
+            onChange={updateAttack}
             min={0}
             required
           />
@@ -70,7 +70,7 @@ export function BuildCharacter({ onGameStart }: BuildCharacterProps) {
             name="defense"
             id="defense"
             value={defense}
-            onInput={updateDefense}
+            onChange={updateDefense}
             min={0}
             required
           />
@@ -82,6 +82,7 @@ export function BuildCharacter({ onGameStart }: BuildCharacterProps) {
             id="remainingPoints"
             value={remainingPoints}
             max={0}
+            readOnly
           />
         </div>
         <button>Start!</button>
